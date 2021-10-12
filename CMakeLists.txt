@@ -3,17 +3,17 @@
 cmake_minimum_required(VERSION 3.19)
 
 # Project name and a few useful settings. Other commands can pick up the results
-project(template
+project(template2
         VERSION 0.1
         DESCRIPTION ""
         LANGUAGES C)
 
 set(HEADER_LIST
-        "${template_SOURCE_DIR}/include/common.h"
+        "${template2_SOURCE_DIR}/include/common.h"
         )
 
 set(COMMON_SOURCE_LIST
-        "${template_SOURCE_DIR}/src/common.c"
+        "${template2_SOURCE_DIR}/src/common.c"
         )
 
 set(PROG1_SOURCE_LIST
@@ -23,11 +23,11 @@ set(PROG2_SOURCE_LIST
         )
 
 set(PROG1_MAIN_SOURCE
-        "${template_SOURCE_DIR}/src/prog1.c"
+        "${template2_SOURCE_DIR}/src/prog1.c"
         )
 
 set(PROG2_MAIN_SOURCE
-        "${template_SOURCE_DIR}/src/prog2.c"
+        "${template2_SOURCE_DIR}/src/prog2.c"
         )
 
 ### Require out-of-source builds
