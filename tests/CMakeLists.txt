@@ -14,7 +14,7 @@ set(TEST_SOURCE_LIST
 
 include_directories(${CGREEN_PUBLIC_INCLUDE_DIRS} ${PROJECT_BINARY_DIR})
 add_executable(template_test
-        ${TEST_SOURCE_LIST} ${TEST_HEADER_LIST} ${SOURCE_LIST} ${HEADER_LIST})
+        ${TEST_SOURCE_LIST} ${TEST_HEADER_LIST} ${COMMON_SOURCE_LIST} ${PROG1_SOURCE_LIST} ${PROG2_SOURCE_LIST} ${HEADER_LIST})
 
 target_compile_features(template_test PRIVATE c_std_11)
 target_compile_options(template_test PRIVATE -g)

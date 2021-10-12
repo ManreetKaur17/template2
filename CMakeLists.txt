@@ -12,8 +12,14 @@ set(HEADER_LIST
         "${template_SOURCE_DIR}/include/common.h"
         )
 
-set(SOURCE_LIST
+set(COMMON_SOURCE_LIST
         "${template_SOURCE_DIR}/src/common.c"
+        )
+
+set(PROG1_SOURCE_LIST
+        )
+
+set(PROG2_SOURCE_LIST
         )
 
 set(PROG1_MAIN_SOURCE
@@ -21,7 +27,7 @@ set(PROG1_MAIN_SOURCE
         )
 
 set(PROG2_MAIN_SOURCE
-        "${assign1_SOURCE_DIR}/src/prog2.c"
+        "${template_SOURCE_DIR}/src/prog2.c"
         )
 
 ### Require out-of-source builds

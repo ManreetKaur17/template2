@@ -10,8 +10,8 @@ IF (LINT)
 ENDIF ()
 
 # Make an executable
-add_executable(prog1 ${SOURCE_LIST} ${PROG1_MAIN_SOURCE} ${HEADER_LIST})
-add_executable(prog2 ${SOURCE_LIST} ${PROG2_MAIN_SOURCE} ${HEADER_LIST})
+add_executable(prog1 ${COMMON_SOURCE_LIST}  ${PROG1_SOURCE_LIST} ${PROG1_MAIN_SOURCE} ${HEADER_LIST})
+add_executable(prog2 ${COMMON_SOURCE_LIST}  ${PROG2_SOURCE_LIST} ${PROG2_MAIN_SOURCE} ${HEADER_LIST})
 
 # We need this directory, and users of our library will need it too
 target_include_directories(prog1 PRIVATE ../include)
@@ -74,7 +74,9 @@ add_custom_target(
         COMMAND clang-format
         -i
         ${HEADER_LIST}
-        ${SOURCE_LIST}
+        ${COMMON_SOURCE_LIST}
+        ${PROG1_SOURCE_LIST}
+        ${PROG2_SOURCE_LIST}
         ${PROG1_MAIN_SOURCE}
         ${PROG2_MAIN_SOURCE}
 )
