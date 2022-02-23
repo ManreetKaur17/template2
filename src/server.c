@@ -185,7 +185,7 @@ static void trace_reporter(const struct dc_posix_env *env, const char *file_name
 static void quit_handler(int sig_num);
 void receive_data(struct dc_posix_env *env, struct dc_error *err, int fd, size_t size);
 
-static int send_udp(struct dc_posix_env *env, struct dc_error *err);
+static int send_udp(struct dc_posix_env *env, struct dc_error *err, FILE *ptr);
 
 
 static volatile sig_atomic_t exit_flag;
@@ -221,12 +221,15 @@ int run_server(void)
     const char *host_name;
     struct addrinfo hints;
     struct addrinfo *result;
+    FILE *fptr;
 
     reporter = error_reporter;
     tracer = trace_reporter;
     tracer = NULL;
     dc_error_init(&err, reporter);
     dc_posix_env_init(&env, tracer);
+    fptr = fopen("output.txt", "w");
+
 
     host_name = "localhost";
     dc_memset(&env, &hints, 0, sizeof(hints));
@@ -315,7 +318,12 @@ int run_server(void)
                                 {
                                     receive_data(&env, &err, client_socket_fd, 1024);
                                     printf("out of read data\n");
-                                    send_udp(&env, &err); // working here
+
+                                    // create file
+                                    //FILE *fptr;
+                                    //fptr = fopen("output.txt", "w");
+
+                                    send_udp(&env, &err, fptr); // working here
 
                                     dc_close(&env, &err, client_socket_fd);
                                 }
@@ -344,6 +352,7 @@ int run_server(void)
         }
     }
 
+    fclose(fptr);
     return EXIT_SUCCESS;
 }
 
@@ -395,7 +404,7 @@ static void quit_handler(int sig_num)
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-static void calculate_statistics(int seq_id_arr[], int sent);
+static void calculate_statistics(int seq_id_arr[], int sent, FILE *fptr);
 
 struct packet
 {
@@ -404,7 +413,7 @@ struct packet
     uint8_t *data; // the data
 };
 
-static int send_udp(struct dc_posix_env *env, struct dc_error *err)
+static int send_udp(struct dc_posix_env *env, struct dc_error *err, FILE *fptr)
 {
     int socket_desc;
     struct sockaddr_in server_addr, client_addr;
@@ -446,6 +455,11 @@ static int send_udp(struct dc_posix_env *env, struct dc_error *err)
     struct packet *my_pac_arr[packets];
     int arr_id[packets];
 
+    FILE *fptr2;
+    fptr2 = fopen("output.txt", "a");
+
+
+
     int cnt = 0;
     while(!(exit_flag) && dc_error_has_no_error(err))
     {
@@ -458,8 +472,16 @@ static int send_udp(struct dc_posix_env *env, struct dc_error *err)
             printf("Couldn't receive\n");
             return -1;
         }
+
         printf("Received message from IP: %s and port: %i\n",
                inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+
+        if (cnt == 0)
+        {
+            fprintf(fptr2, "Client IP = %s\n", inet_ntoa(client_addr.sin_addr));
+            fprintf(fptr2, "Client IP = %i\n", ntohs(client_addr.sin_port));
+        }
+
 
         printf("Packet id: %hu\n", my_packet->id);
         my_pac_arr[cnt] = my_packet;
@@ -483,6 +505,8 @@ static int send_udp(struct dc_posix_env *env, struct dc_error *err)
         free(my_packet);
     }
 
+    fclose(fptr2);
+
     printf("done receiving udp\n");
 
     for (int i = 0; i < packets; i++)
@@ -495,13 +519,13 @@ static int send_udp(struct dc_posix_env *env, struct dc_error *err)
     // Close the socket:
     close(socket_desc);
 
-    calculate_statistics(arr_id, packets);
+    calculate_statistics(arr_id, packets, fptr);
 
 
     return 0;
 }
 
-static void calculate_statistics(int seq_id_arr[], int sent)
+static void calculate_statistics(int seq_id_arr[], int sent, FILE *fptr)
 {
     printf("in func: %d\n", seq_id_arr[0]);
     printf("in func: %d\n", seq_id_arr[90]);
@@ -509,6 +533,8 @@ static void calculate_statistics(int seq_id_arr[], int sent)
     int received = sent;
     int lost;
     int out_of_order = 0;
+
+    int lost_seq;
 
     for (int i = 0; i < sent; i++)
     {
@@ -525,24 +551,26 @@ static void calculate_statistics(int seq_id_arr[], int sent)
             }
         }
 
+      //  if (seq_id_arr[i] != )
+
     }
 
     lost = sent - received;
 
-    FILE *fptr;
 
-    fptr = fopen("output.txt", "a");
+    FILE *fptr2;
 
-    fprintf(fptr, "# of packets RECEIVED = %d\n", received);
-    fprintf(fptr, "# of packets LOST = %d\n", lost);
-    fprintf(fptr, "# of packets received OUT OF ORDER = %d\n", out_of_order);
+    fptr2 = fopen("output.txt", "a");
+
+    fprintf(fptr2, "# of packets RECEIVED = %d\n", received);
+    fprintf(fptr2, "# of packets LOST = %d\n", lost);
+    fprintf(fptr2, "# of packets received OUT OF ORDER = %d\n", out_of_order);
 
     printf("# of packets RECEIVED = %d\n", received);
     printf("# of packets LOST = %d\n", lost);
-    printf("# of packets received OUT OF ORDER = %d\n", out_of_order);
+    printf("# of packets received OUT OF ORDER = %d\n\n", out_of_order);
 
-    fclose(fptr);
-
+    fclose(fptr2);
 
 }
 

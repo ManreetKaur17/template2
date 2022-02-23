@@ -593,7 +593,7 @@ static int send_end(const struct dc_posix_env *env, struct dc_error *err, int so
             sigemptyset(&new_action.sa_mask);
             new_action.sa_flags = 0;
             dc_sigaction(env, err, SIGINT, &new_action, NULL);
-            strcpy(data, "GET / HTTP/1.0\r\n\r\n");
+            strcpy(data, "GET / HTTP/1.0\r\n\r\n");  // TODO: fix this
 
             if(dc_error_has_no_error(err))
             {
@@ -625,7 +625,7 @@ static int close_tcp_connection(const struct dc_posix_env *env, struct dc_error 
         printf("closing socket\n");
         dc_close(env, err, socket_fd);
     }
-    return EXIT_SUCCESS;
+    return EXIT_SUCCESS; // TODO: change to EXIT ??
 }
 
 
