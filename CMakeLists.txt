@@ -16,18 +16,18 @@ set(COMMON_SOURCE_LIST
         "${template2_SOURCE_DIR}/src/common.c"
         )
 
-set(PROG1_SOURCE_LIST
+set(CLIENT_SOURCE_LIST
         )
 
-set(PROG2_SOURCE_LIST
+set(SERVER_SOURCE_LIST
         )
 
-set(PROG1_MAIN_SOURCE
-        "${template2_SOURCE_DIR}/src/prog1.c"
+set(CLIENT_MAIN_SOURCE
+        "${template2_SOURCE_DIR}/src/client.c"
         )
 
-set(PROG2_MAIN_SOURCE
-        "${template2_SOURCE_DIR}/src/prog2.c"
+set(SERVER_MAIN_SOURCE
+        "${template2_SOURCE_DIR}/src/server.c"
         )
 
 ### Require out-of-source builds
